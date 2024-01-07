@@ -25,9 +25,12 @@ async def on_ready():
     print(f'Bot {bot.user} is ready!')
 
 @bot.slash_command(name= "logchannel")
-@commands.has_permissions(administrator=True)
 async def setlogchannel(ctx: commands.Context, channel: discord.TextChannel):
     # 관리자만 로그 채널 설정 가능
+    if not ctx.author.guild_permissions.administrator:
+        await ctx.respond("관리자 권한이 필요합니다.")
+        return
+
     c.execute('''INSERT OR REPLACE INTO log_channels (guild_id, log_channel)
                  VALUES (?, ?)''', (ctx.guild.id, channel.id))
     conn.commit()
