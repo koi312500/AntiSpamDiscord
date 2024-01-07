@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, timezone
 import sqlite3
 
 import key
+import pytz
 
 intents = discord.Intents.default()
 intents.guilds = True
@@ -52,24 +53,22 @@ async def on_member_join(member):
             # 로그를 채널에 기록
             log_channel = bot.get_channel(log_channel_id)
             if log_channel:
-                await log_channel.send(f"{member}는 계정 생성 후 30일이 지나지 않아 차단되었습니다.")
+                embed = discord.Embed(title="Spam Blocked", color=0xFF2D00)
+                embed.add_field(name="Account creation", value=difference, inline=False)
+                embed.add_field(name="Result", value="Ban", inline=False)
+                embed.add_field(name="Reason", value="계정 생성 후 30일이 지나지 않았습니다.", inline=False)
+                embed.set_author(name=f"{member.name} {member.id}",icon_url=member.avatar.url if member.avatar else member.default_avatar.url)
+                embed.timestamp = datetime.utcnow()
 
-@bot.event
-async def on_member_remove(member):
-    c.execute('SELECT log_channel FROM log_channels WHERE guild_id=?', (member.guild.id,))
-    result = c.fetchone()
-    if result:
-        log_channel_id = result[0]
-        join_date = member.created_at
-        current_time = datetime.utcnow().replace(tzinfo=timezone.utc)
-        difference = current_time - join_date
-        thirty_days = timedelta(days=30)
-        if difference < thirty_days:
-            await member.ban(reason="계정 생성 후 30일이 지나지 않았습니다.")
-            print(f"{member}는 오프라인 상태에서 계정 생성 후 30일이 지나지 않아 차단되었습니다.")
-            # 로그를 채널에 기록
+                await log_channel.send(embed=embed)
+        else:
             log_channel = bot.get_channel(log_channel_id)
             if log_channel:
-                await log_channel.send(f"{member}는 오프라인 상태에서 계정 생성 후 30일이 지나지 않아 차단되었습니다.")
+                    embed = discord.Embed(title="UserJoin", color=0x62c1cc)
+                    embed.add_field(name="Account creation", value=difference, inline=False)
+                    embed.add_field(name="Result", value="Pass", inline=False)
+                    embed.set_author(name=f"{member.name} {member.id}",icon_url=member.avatar.url if member.avatar else member.default_avatar.url)
+                    embed.timestamp = datetime.utcnow()
+                    await log_channel.send(embed=embed)
 
 bot.run(key.discord_key)
