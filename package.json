@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "discord.js": "^14.14.1"
+  },
+  "name": "antispamdiscord",
+  "description": "Discord Bot which blocks spam at server.",
+  "version": "0.0.1",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koi312500/AntiSpamDiscord.git"
+  },
+  "author": "KOI3125",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/koi312500/AntiSpamDiscord/issues"
+  },
+  "homepage": "https://github.com/koi312500/AntiSpamDiscord#readme"
+}
